@@ -9,8 +9,7 @@ from string import Template
 import logging
 import os
 import time
-import json
-import re
+
 
 channels_url = 'https://watch.foxtel.com.au/en-AU/epg-fixture'
 
@@ -20,11 +19,10 @@ logging.basicConfig(format='%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)
 logger = logging.getLogger(__name__)
 
 SLEEP_TIME_IN_SECONDS = 6
-URL_FILTERS = ["mpd", "lic"]
 
 
 class FoxtelWatcher:
-	__slots__ = ('driver', 'FOXTEL_USERNAME', 'FOXTEL_PASSWORD', 'FOXTEL_URL', 'targetUrl')
+	__slots__ = ('driver', 'FOXTEL_USERNAME', 'FOXTEL_PASSWORD', 'CHANNEL_GENRE', 'CHANNEL_NUMBER')
 
 	def __init__(self):    
 		
@@ -41,15 +39,16 @@ class FoxtelWatcher:
 			self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),
 										   options=chromeOptions)
 
-			self.FOXTEL_URL = os.environ.get(
-				'FOXTEL_URL', "https://watch.foxtel.com.au/app/")
+
 			self.FOXTEL_USERNAME = os.environ.get('FOXTEL_USERNAME')
 			self.FOXTEL_PASSWORD = os.environ.get('FOXTEL_PASSWORD')
-			if not self.FOXTEL_USERNAME or not self.FOXTEL_PASSWORD:
+			self.CHANNEL_GENRE = os.environ.get('CHANNEL_GENRE')
+			self.CHANNEL_NUMBER = os.environ.get('CHANNEL_NUMBER')
+			if not self.FOXTEL_USERNAME or not self.FOXTEL_PASSWORD or not self.CHANNEL_GENRE or not self.CHANNEL_NUMBER:
 				raise Exception(
-					"FOXTEL_USERNAME and FOXTEL_PASSWORD are not set")
+					"FOXTEL_USERNAME, FOXTEL_PASSWORD, CHANNEL_GENRE or CHANNEL_NUMBER are not set in .env")
 			
-			self.targetUrl = '';
+			#self.targetUrl = '';
 
 		except Exception as e:
 			logger.error(f"Unable to initialise FoxtelWatcher: {type(e)} {e}")
@@ -57,6 +56,7 @@ class FoxtelWatcher:
 
    
 	def checkState(self):
+		#todo, not updated
 		logger.info("checking state...")
 		try:
 
@@ -113,10 +113,10 @@ class FoxtelWatcher:
 		:return:
 		'''
 		self.driver.get(url)
-		self.targetUrl = url;
+		#self.targetUrl = url;
 		time.sleep(SLEEP_TIME_IN_SECONDS)
 		
-	def play_channel(self, genre, channel_num):
+	def play_channel(self):
 		
 		logger.info(f"Loading Channels...")
 		self.navigate_to_url(channels_url)
@@ -124,7 +124,7 @@ class FoxtelWatcher:
 		logger.info(f"Selecting Channel...")
 		self.driver.find_element(By.CSS_SELECTOR, "button[aria-haspopup='listbox']").click()
 		time.sleep(1)  # let the dropdown render
-		self.driver.find_element(By.XPATH, f"//li[@role='option' and .//span[contains(text(), '{genre}')]]").click()
+		self.driver.find_element(By.XPATH, f"//li[@role='option' and .//span[contains(text(), '{self.CHANNEL_GENRE}')]]").click()
 		time.sleep(1)  # let the channel list render
 
 		script = """
@@ -135,7 +135,7 @@ class FoxtelWatcher:
 		channelRows[idx].querySelector('.channel-list-item').click();
 		return true;
 		"""
-		found = self.driver.execute_script(script, str(channel_num))
+		found = self.driver.execute_script(script, str(self.CHANNEL_NUMBER))
 		time.sleep(SLEEP_TIME_IN_SECONDS)
 		
 		if not found:
@@ -213,7 +213,7 @@ class FoxtelWatcher:
 		'''
 		try:
 			logger.info("Loading foxtel page and initiating login")
-			self.driver.get(self.FOXTEL_URL)
+			self.driver.get(channels_url)
 			time.sleep(SLEEP_TIME_IN_SECONDS)
 
 			username = self.driver.find_element(

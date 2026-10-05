@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
 		scraper = FoxtelWatcher()
 		scraper.load_and_login()		
-		scraper.play_channel("Sports", "502")
+		scraper.play_channel()
 		scraper.go_fullscreen()
 		
 		logger.info(f"Starting Monitor")

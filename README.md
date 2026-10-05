@@ -17,7 +17,10 @@ create .env file in base dir with foxtel subscription logins:
 ```
 FOXTEL_USERNAME=email
 FOXTEL_PASSWORD=password
+CHANNEL_GENRE=Sports
+CHANNEL_NUMBER=502
 ```
+See https://watch.foxtel.com.au/en-AU/epg-fixture for the list of available genres (in the drop down) and the desired channel number. 
 
 Inspired and forked from https://github.com/coxy86/iptv
 The content is paid for (I wouldnt, but people do), this is not pirating, foxtel blocking linux & firefox is arbitrary and imo antitrust.
