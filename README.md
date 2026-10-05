@@ -11,7 +11,8 @@ Requires supervisor for autostart/restart, link supervisor scripts from repo int
 ln -s /home/user/foxtel_watcher/supervisor.player.conf /etc/supervisor/conf.d/supervisor.player.conf
 ln -s /home/user/foxtel_watcher/supervisor.control.conf /etc/supervisor/conf.d/supervisor.control.conf
 ```
-"player" launches a chrome instance with remote console access, and "control" launches a selenium script that connects to chrome and navigates it to the channel specified in launch.py (edit as needed)
+"player" launches a chrome instance with remote console access
+"control" launches a selenium script that connects to chrome and navigates it to the channel specified in launch.py (edit as needed)
 
 create .env file in base dir with foxtel subscription logins:
 ```
@@ -23,4 +24,5 @@ CHANNEL_NUMBER=502
 See https://watch.foxtel.com.au/en-AU/epg-fixture for the list of available genres (in the drop down) and the desired channel number. 
 
 Inspired and forked from https://github.com/coxy86/iptv
+
 The content is paid for (I wouldnt, but people do), this is not pirating, foxtel blocking linux & firefox is arbitrary and imo antitrust.
