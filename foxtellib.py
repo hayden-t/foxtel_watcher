@@ -139,7 +139,7 @@ class FoxtelWatcher:
 		time.sleep(SLEEP_TIME_IN_SECONDS)
 		
 		if not found:
-			raise Exception(f"Channel {channel_num} not found in logo list")  
+			raise Exception(f"Channel {self.CHANNEL_NUMBER} not found in logo list")  
 
 
 	def go_fullscreen(self):
@@ -153,6 +153,7 @@ class FoxtelWatcher:
 			pass
 	
 	def deregister_chrome(self):
+		#has not been updated since ui change
 		try:
 			logger.info("Deregister Chrome ...")
 			self.open_app_settings()
@@ -211,11 +212,11 @@ class FoxtelWatcher:
 		This requires environment variables FOXTEL_USERNAME and FOXTEL_PASSWORD to be set
 		:return:
 		'''
-		try:
-			logger.info("Loading foxtel page and initiating login")
-			self.driver.get(channels_url)
-			time.sleep(SLEEP_TIME_IN_SECONDS)
+		logger.info("Loading foxtel page and initiating login")
+		self.driver.get(channels_url)
+		time.sleep(SLEEP_TIME_IN_SECONDS)
 
+		try:
 			username = self.driver.find_element(
 				By.XPATH, "//input[@type='email']")
 			password = self.driver.find_element(
@@ -224,10 +225,8 @@ class FoxtelWatcher:
 			password.send_keys(self.FOXTEL_PASSWORD)
 			self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 			time.sleep(SLEEP_TIME_IN_SECONDS)
-		except NoSuchElementException as e:
-			logger.info(f"A session appears to be active. Skipping login ....")
-			try:
-				self.driver.find_element(By.CSS_SELECTOR, "span[fallback='Log out']")#check logged in
-			except Exception as e:
-				logger.error(f"Something is not right: {e}")
-				raise(e)
+		except NoSuchElementException:
+			logger.info("A session appears to be active. Skipping login ....")
+
+		if not self.driver.current_url.startswith(channels_url):
+			raise Exception(f"Login failed, ended up at {self.driver.current_url}")
