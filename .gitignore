@@ -1,0 +1,5 @@
+ChromeProfile
+__pycache__
+.env
+control.log
+player.log
