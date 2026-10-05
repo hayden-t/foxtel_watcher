@@ -12,6 +12,7 @@ ln -s /home/user/foxtel_watcher/supervisor.player.conf /etc/supervisor/conf.d/su
 ln -s /home/user/foxtel_watcher/supervisor.control.conf /etc/supervisor/conf.d/supervisor.control.conf
 ```
 "player" launches a chrome instance with remote console access
+
 "control" launches a selenium script that connects to chrome and navigates it to the channel specified in launch.py (edit as needed)
 
 create .env file in base dir with foxtel subscription logins:
