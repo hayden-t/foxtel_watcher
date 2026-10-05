@@ -24,6 +24,11 @@ CHANNEL_NUMBER=502
 ```
 See https://watch.foxtel.com.au/en-AU/epg-fixture for the list of available genres (in the drop down) and the desired channel number. 
 
-Inspired and forked from https://github.com/coxy86/iptv
+You might also like to have auto hide inactive cursor, put this in startup
+```
+unclutter -idle 5 -root
+```
+
+Inspired and based on https://github.com/coxy86/iptv
 
 The content is paid for (I wouldnt, but people do), this is not pirating, foxtel blocking linux & firefox is arbitrary and imo antitrust.
