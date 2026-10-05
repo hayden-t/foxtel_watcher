@@ -5,7 +5,7 @@ Requires Chrome with "User-Agent Switcher and Manager" extension installed and a
 ```
 chrome://extensions/?id=bhchdcejhohfmigjafbampogmaanbfkg
 ```
-You will also need the python libs listed in requirements.txt
+You will also need the python libs listed in requirements.txt via pip/venv
 
 Requires supervisor for autostart/restart, link supervisor scripts from repo into etc to create workers and loggers, edit paths here and in the linked scripts as need:
 ```
