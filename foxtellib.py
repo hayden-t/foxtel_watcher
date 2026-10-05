@@ -128,15 +128,41 @@ class FoxtelWatcher:
 		time.sleep(1)  # let the channel list render
 
 		script = """
-		const logos = Array.from(document.querySelectorAll('.channelLogo__channel-number-text___XmDaM'));
-		const idx = logos.findIndex(e => e.textContent.trim() === arguments[0]);
+		const channelNumber = arguments[0];
+
+		const logoContainer = document.getElementById('all-channel-logos');
+		const rowContainer = document.getElementById('all-channel-content');
+
+		const numbers = Array.from(logoContainer.querySelectorAll('span'))
+			.filter(e => /^\\d+$/.test(e.textContent.trim()));
+
+		const idx = numbers.findIndex(
+			e => e.textContent.trim() === channelNumber
+		);
+
 		if (idx === -1) return false;
-		const channelRows = document.querySelectorAll('.channel__single-channel___26Las');
-		channelRows[idx].querySelector('.channel-list-item').click();
+
+		const row = rowContainer.children[idx];
+		const firstShow = row.querySelector('[class~="channel-list-item"]');
+
+		if (!firstShow) return false;
+
+		firstShow.click();
 		return true;
 		"""
+		
 		found = self.driver.execute_script(script, str(self.CHANNEL_NUMBER))
 		time.sleep(SLEEP_TIME_IN_SECONDS)
+		
+		logger.info(f"Checking if muted...")
+		unmute = self.driver.find_elements(
+			By.CSS_SELECTOR,
+			"button[data-test-id~='VOLUME_BUTTON_MUTED']"
+		)
+		
+		
+		if unmute:			
+			unmute[0].click()
 		
 		if not found:
 			raise Exception(f"Channel {self.CHANNEL_NUMBER} not found in logo list")  
@@ -153,7 +179,7 @@ class FoxtelWatcher:
 			pass
 	
 	def deregister_chrome(self):
-		#has not been updated since ui change
+		#has not been updated since ft ui change
 		try:
 			logger.info("Deregister Chrome ...")
 			self.open_app_settings()
@@ -183,6 +209,7 @@ class FoxtelWatcher:
 
 
 	def open_app_settings(self):
+		#has not been updated since ft ui change
 		try:
 			logger.info("App Settings ...")
 			self.driver.find_element(
