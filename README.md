@@ -1,5 +1,5 @@
 # Foxtel Watcher
-Automatically plays a chosen channel from watch.foxtel.com.au in the browser, fullscreen, from boot and maintains under linux.
+Automatically plays a chosen channel from watch.foxtel.com.au (Foxtel Go) in the browser, fullscreen, from boot and maintains under linux.
 
 Requires Chrome with "User-Agent Switcher and Manager" extension installed and activated for all tabs as "windows 10", (start the player worker and then install it from chrome store)
 ```
