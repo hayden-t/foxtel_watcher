@@ -9,8 +9,8 @@ You will also need the python libs listed in requirements.txt via pip/venv
 
 Requires supervisor for autostart/restart, link supervisor scripts from repo into etc to create workers and loggers, edit paths here and in the linked scripts as need:
 ```
-ln -s /home/user/foxtel_watcher/supervisor.player.conf /etc/supervisor/conf.d/supervisor.player.conf
-ln -s /home/user/foxtel_watcher/supervisor.control.conf /etc/supervisor/conf.d/supervisor.control.conf
+ln -s /home/user/foxtel_watcher/supervisor.browser.conf /etc/supervisor/conf.d/supervisor.browser.conf
+ln -s /home/user/foxtel_watcher/supervisor.controller.conf /etc/supervisor/conf.d/supervisor.controller.conf
 ```
 "player" launches a chrome instance with remote console access
 
