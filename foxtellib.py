@@ -55,39 +55,14 @@ class FoxtelWatcher:
 			raise(e)
 
    
-	def checkState(self):
-		#todo, not updated
-		logger.info("checking state...")
+	def video_exists(self):
 		try:
+			video = self.driver.find_element(By.CSS_SELECTOR, "[data-test-id='PLAYER_SOLUTION'] video")
+		except NoSuchElementException:
+			return False
 
-			if self.driver.current_url != self.targetUrl:
-				logger.info(f"Correcting Url")
-				self.navigate_to_url(self.targetUrl)
-				
-			try:    
-				loadingSpinner = self.driver.find_element(By.CSS_SELECTOR, ".loading-indicator-container")
-		   
-				if loadingSpinner:
-					logger.info("Player stuck, reloading");
-					self.refresh();
-			except NoSuchElementException:
-				pass
-		   
-			playButton = self.driver.find_element(By.CSS_SELECTOR, ".play-toggle")
-			playTitle = playButton.find_element(By.CSS_SELECTOR, "desc").get_attribute("innerHTML")
-			
-			if playTitle == 'Play Button':
-				logger.info("Playing Video")
-				playButton.click()
-				
-			#check fullscreen ?
-				
-		except Exception as e:
-			logger.info(f"{e.msg}")
-			
-			logger.info(f'refreshing');
-			time.sleep(10);
-			self.refresh();
+		src = video.get_attribute("src")#video src blob can dissapear after time
+		return bool(src and src.strip())
 
 
 	def refresh(self):
@@ -233,13 +208,13 @@ class FoxtelWatcher:
 			logger.error(f"Unable to logout session")
 			raise(e)
 
-	def load_and_login(self):
+	def login(self):
 		'''
 		Loads the FOXTEL website and automatically logs in user.
 		This requires environment variables FOXTEL_USERNAME and FOXTEL_PASSWORD to be set
 		:return:
 		'''
-		logger.info("Loading foxtel page and initiating login")
+		logger.info("Initiating login")
 		self.driver.get(channels_url)
 		time.sleep(SLEEP_TIME_IN_SECONDS)
 
@@ -253,7 +228,15 @@ class FoxtelWatcher:
 			self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 			time.sleep(SLEEP_TIME_IN_SECONDS)
 		except NoSuchElementException:
-			logger.info("A session appears to be active. Skipping login ....")
+			logger.info("Login form not present, assuming logged in")
 
-		if not self.driver.current_url.startswith(channels_url):
+		if not self.logged_in():
 			raise Exception(f"Login failed, ended up at {self.driver.current_url}")
+
+	def logged_in(self):
+		#check if logged in
+		if self.driver.current_url.startswith(channels_url):#assume logged in if on this page
+			return True
+		else:
+			return False
+		
