@@ -2,6 +2,7 @@ import logging
 from dotenv import load_dotenv
 from foxtellib import FoxtelWatcher
 import time
+import subprocess
 
 load_dotenv()
 
@@ -29,8 +30,9 @@ if __name__ == "__main__":
 				logger.info("Starting monitor...")
 				time.sleep(30)#allow this long to settle before monitoring
 		except Exception:
-			logger.exception("Error, retrying")
+			logger.exception("Controller startup error, restarting browser & retrying in 30 sec")
 			controller = None
+			subprocess.run(["supervisorctl", "restart", "browser"], check=False)
 			time.sleep(30)#wait this long after exception before retry
 
 		time.sleep(5)#check working every sec, could like reduce for faster error detection and recovery
