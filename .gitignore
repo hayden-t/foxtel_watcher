@@ -1,5 +1,5 @@
 ChromeProfile
 __pycache__
 .env
-controller.log
-browser.log
+*.log
+
