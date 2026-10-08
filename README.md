@@ -7,7 +7,7 @@ chrome://extensions/?id=bhchdcejhohfmigjafbampogmaanbfkg
 ```
 You will also need the python libs listed in requirements.txt via pip/venv
 
-Requires supervisor package for autostart/restart, link included supervisor scripts from repo into etc to create workers and log monitors, edit paths here and in the linked scripts to match yours:
+Requires supervisor package for autostart/restart, link included supervisor scripts from repo into etc to create workers and log monitors, edit paths/usernames here and in the linked scripts to match your environment:
 ```
 ln -s /home/user/foxtel_watcher/supervisor.browser.conf /etc/supervisor/conf.d/supervisor.browser.conf
 ln -s /home/user/foxtel_watcher/supervisor.controller.conf /etc/supervisor/conf.d/supervisor.controller.conf
